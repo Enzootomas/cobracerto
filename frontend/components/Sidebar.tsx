@@ -3,7 +3,6 @@ import Link from "next/link";
 export default function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 flex h-screen w-64 flex-col border-r border-slate-800 bg-slate-950 p-6 text-white">
-
       <div className="mb-10">
         <h1 className="text-2xl font-bold">
           Cobra<span className="text-blue-500">Certo</span>
@@ -15,7 +14,6 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex flex-col gap-2">
-
         <Link
           href="/"
           className="rounded-lg px-4 py-3 text-sm text-slate-300 transition hover:bg-slate-900 hover:text-white"
@@ -30,19 +28,19 @@ export default function Sidebar() {
           Clientes
         </Link>
 
-        <button
-          className="rounded-lg px-4 py-3 text-left text-sm text-slate-500"
-          disabled
+        <Link
+          href="/contas-receber"
+          className="rounded-lg px-4 py-3 text-sm text-slate-300 transition hover:bg-slate-900 hover:text-white"
         >
           Contas a receber
-        </button>
+        </Link>
 
-        <button
-          className="rounded-lg px-4 py-3 text-left text-sm text-slate-500"
-          disabled
+        <Link
+          href="/inadimplentes"
+          className="rounded-lg px-4 py-3 text-sm text-slate-300 transition hover:bg-slate-900 hover:text-white"
         >
           Inadimplentes
-        </button>
+        </Link>
 
         <button
           className="rounded-lg px-4 py-3 text-left text-sm text-slate-500"
@@ -50,11 +48,9 @@ export default function Sidebar() {
         >
           Conciliação
         </button>
-
       </nav>
 
       <div className="mt-auto border-t border-slate-800 pt-5">
-
         <p className="text-sm font-medium">
           CobraCerto
         </p>
@@ -62,9 +58,7 @@ export default function Sidebar() {
         <p className="text-xs text-slate-500">
           MVP em desenvolvimento
         </p>
-
       </div>
-
     </aside>
   );
 }
