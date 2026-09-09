@@ -1,85 +1,209 @@
-import Sidebar from "@/components/Sidebar";
+"use client";
 
-const cards = [
-  {
-    title: "A receber",
-    value: "R$ 18.450,00",
-  },
-  {
-    title: "Recebido este mês",
-    value: "R$ 42.300,00",
-  },
-  {
-    title: "Em atraso",
-    value: "R$ 6.800,00",
-  },
-  {
-    title: "Inadimplência",
-    value: "8,4%",
-  },
-];
+import { useEffect, useState } from "react";
 
-export default function Home() {
+import {
+  DashboardSummary,
+  getDashboardSummary,
+} from "../lib/api";
+
+
+export default function DashboardPage() {
+  const [summary, setSummary] =
+    useState<DashboardSummary | null>(null);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [error, setError] =
+    useState("");
+
+
+  useEffect(() => {
+    async function loadDashboard() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const data =
+          await getDashboardSummary();
+
+        setSummary(data);
+
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError(
+            "Erro ao carregar dashboard."
+          );
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadDashboard();
+  }, []);
+
+
+  function formatCurrency(value: string) {
+    return Number(value).toLocaleString(
+      "pt-BR",
+      {
+        style: "currency",
+        currency: "BRL",
+      }
+    );
+  }
+
+
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <main className="min-h-screen bg-slate-950 p-8 text-white">
 
-      <Sidebar />
+      <div className="mx-auto max-w-7xl">
 
-      <main className="ml-64 p-10">
+        <div className="mb-8">
 
-        <div className="mb-10">
-
-          <p className="text-sm text-blue-400">
-            Dashboard
+          <p className="text-sm font-semibold text-blue-400">
+            CobraCerto
           </p>
 
-          <h2 className="mt-2 text-3xl font-bold">
-            Olá 👋
-          </h2>
+          <h1 className="mt-2 text-3xl font-bold">
+            Dashboard
+          </h1>
 
           <p className="mt-2 text-slate-400">
-            Acompanhe a saúde financeira da sua empresa.
+            Visão geral da situação financeira da empresa.
           </p>
 
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
 
-          {cards.map((card) => (
+        {error && (
+          <div className="mb-6 rounded-xl border border-red-900 bg-red-950/40 p-4 text-red-300">
+            {error}
+          </div>
+        )}
 
-            <div
-              key={card.title}
-              className="rounded-2xl border border-slate-800 bg-slate-900 p-6"
-            >
+
+        {loading ? (
+
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-8">
+            <p className="text-slate-400">
+              Carregando dashboard...
+            </p>
+          </div>
+
+        ) : summary ? (
+
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+
+            {/* TOTAL A RECEBER */}
+
+            <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
 
               <p className="text-sm text-slate-400">
-                {card.title}
+                Total a receber
               </p>
 
-              <p className="mt-3 text-2xl font-bold">
-                {card.value}
+              <p className="mt-3 text-3xl font-bold">
+                {formatCurrency(
+                  summary.total_receivable
+                )}
+              </p>
+
+              <p className="mt-2 text-xs text-slate-500">
+                Cobranças ainda não pagas
               </p>
 
             </div>
 
-          ))}
 
-        </div>
+            {/* TOTAL PAGO */}
 
-        <section className="mt-10 rounded-2xl border border-slate-800 bg-slate-900 p-7">
+            <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
 
-          <h3 className="text-lg font-semibold">
-            Visão geral
-          </h3>
+              <p className="text-sm text-slate-400">
+                Total pago
+              </p>
 
-          <p className="mt-2 text-sm text-slate-400">
-            Os indicadores financeiros reais serão conectados ao backend nas próximas etapas.
-          </p>
+              <p className="mt-3 text-3xl font-bold text-emerald-400">
+                {formatCurrency(
+                  summary.total_paid
+                )}
+              </p>
 
-        </section>
+              <p className="mt-2 text-xs text-slate-500">
+                Valores já recebidos
+              </p>
 
-      </main>
+            </div>
 
-    </div>
+
+            {/* TOTAL ATRASADO */}
+
+            <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+
+              <p className="text-sm text-slate-400">
+                Total em atraso
+              </p>
+
+              <p className="mt-3 text-3xl font-bold text-red-400">
+                {formatCurrency(
+                  summary.total_overdue
+                )}
+              </p>
+
+              <p className="mt-2 text-xs text-slate-500">
+                Valores vencidos e não pagos
+              </p>
+
+            </div>
+
+
+            {/* INADIMPLENTES */}
+
+            <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+
+              <p className="text-sm text-slate-400">
+                Cobranças atrasadas
+              </p>
+
+              <p className="mt-3 text-3xl font-bold text-amber-400">
+                {summary.overdue_count}
+              </p>
+
+              <p className="mt-2 text-xs text-slate-500">
+                Pendências que precisam de atenção
+              </p>
+
+            </div>
+
+          </div>
+
+        ) : null}
+
+
+        {summary && (
+
+          <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+
+            <h2 className="text-xl font-semibold">
+              Resumo financeiro
+            </h2>
+
+            <p className="mt-2 text-slate-400">
+              Os valores acima são calculados automaticamente
+              com base nas cobranças cadastradas no CobraCerto.
+            </p>
+
+          </div>
+
+        )}
+
+      </div>
+
+    </main>
   );
 }
