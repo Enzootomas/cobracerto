@@ -12,6 +12,7 @@ from app.schemas.collection_message import (
     CollectionGenerateRequest,
     CollectionMessageResponse,
 )
+from app.services.ai_collection import generate_ai_collection_message
 
 
 router = APIRouter(
@@ -45,7 +46,6 @@ def generate_collection_text(
     due_date_formatted = due_date.strftime("%d/%m/%Y")
 
     messages = {
-
         "friendly": (
             f"Olá, {client_name}! Tudo bem? "
             f"Passando para lembrar que identificamos uma pendência "
@@ -69,12 +69,14 @@ def generate_collection_text(
             f"Prezado(a) {client_name}, informamos que consta em nosso "
             f"sistema uma pendência financeira referente a {description}, "
             f"no valor de {amount_formatted}, com vencimento em "
-            f"{due_date_formatted}. Solicitamos a regularização do "
-            "pagamento ou o contato para eventuais esclarecimentos."
+            f"{due_date_formatted}. "
+            "Solicitamos a regularização do pagamento ou o contato "
+            "para eventuais esclarecimentos."
         ),
 
         "direct": (
-            f"Olá, {client_name}. O pagamento referente a {description}, "
+            f"Olá, {client_name}. "
+            f"O pagamento referente a {description}, "
             f"no valor de {amount_formatted}, está pendente. "
             f"Vencimento: {due_date_formatted}. "
             "Por favor, verifique a regularização do pagamento."
@@ -93,7 +95,6 @@ def generate_collection_message(
     data: CollectionGenerateRequest,
     db: Session = Depends(get_db)
 ):
-
     result = (
         db.query(Receivable, Client)
         .join(
@@ -126,13 +127,28 @@ def generate_collection_message(
             detail="Esta cobrança ainda não está atrasada."
         )
 
-    message_text = generate_collection_text(
-        client_name=client.name,
-        description=receivable.description,
-        amount=receivable.amount,
-        due_date=receivable.due_date,
-        tone=data.tone
-    )
+    days_overdue = (
+        date.today() - receivable.due_date
+    ).days
+
+    try:
+        message_text = generate_ai_collection_message(
+            client_name=client.name,
+            description=receivable.description,
+            amount=receivable.amount,
+            due_date=receivable.due_date,
+            days_overdue=days_overdue,
+            tone=data.tone
+        )
+
+    except Exception:
+        message_text = generate_collection_text(
+            client_name=client.name,
+            description=receivable.description,
+            amount=receivable.amount,
+            due_date=receivable.due_date,
+            tone=data.tone
+        )
 
     collection_message = CollectionMessage(
         receivable_id=receivable.id,
@@ -153,6 +169,7 @@ def generate_collection_message(
         created_at=collection_message.created_at
     )
 
+
 @router.get(
     "/receivable/{receivable_id}",
     response_model=list[CollectionMessageResponse]
@@ -163,7 +180,9 @@ def list_collection_messages(
 ):
     receivable = (
         db.query(Receivable)
-        .filter(Receivable.id == receivable_id)
+        .filter(
+            Receivable.id == receivable_id
+        )
         .first()
     )
 
@@ -175,63 +194,21 @@ def list_collection_messages(
 
     client = (
         db.query(Client)
-        .filter(Client.id == receivable.client_id)
+        .filter(
+            Client.id == receivable.client_id
+        )
         .first()
     )
 
     messages = (
         db.query(CollectionMessage)
         .filter(
-            CollectionMessage.receivable_id == receivable_id
+            CollectionMessage.receivable_id
+            == receivable_id
         )
         .order_by(
             CollectionMessage.created_at.desc()
         )
-        .all()
-    )
-
-    return [
-        CollectionMessageResponse(
-            id=message.id,
-            receivable_id=message.receivable_id,
-            client_name=client.name,
-            tone=message.tone,
-            message=message.message,
-            created_at=message.created_at
-        )
-        for message in messages
-    ]
-
-@router.get(
-    "/receivable/{receivable_id}",
-    response_model=list[CollectionMessageResponse]
-)
-def list_collection_messages(
-    receivable_id: int,
-    db: Session = Depends(get_db)
-):
-    receivable = (
-        db.query(Receivable)
-        .filter(Receivable.id == receivable_id)
-        .first()
-    )
-
-    if not receivable:
-        raise HTTPException(
-            status_code=404,
-            detail="Cobrança não encontrada."
-        )
-
-    client = (
-        db.query(Client)
-        .filter(Client.id == receivable.client_id)
-        .first()
-    )
-
-    messages = (
-        db.query(CollectionMessage)
-        .filter(CollectionMessage.receivable_id == receivable_id)
-        .order_by(CollectionMessage.created_at.desc())
         .all()
     )
 
