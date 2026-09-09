@@ -6,6 +6,7 @@ from app.database.connection import Base, engine
 from app.models.client import Client
 from app.models.receivable import Receivable
 from app.models.collection_message import CollectionMessage
+from app.routes.dashboard import router as dashboard_router
 
 from app.routes.clients import router as clients_router
 from app.routes.receivables import router as receivables_router
@@ -19,7 +20,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="CobraCerto API",
     description="API backend da plataforma CobraCerto",
-    version="0.4.0"
+    version="0.5.0"
 )
 
 
@@ -35,6 +36,7 @@ app.add_middleware(
 app.include_router(clients_router)
 app.include_router(receivables_router)
 app.include_router(collections_router)
+app.include_router(dashboard_router)
 
 
 @app.get("/")
