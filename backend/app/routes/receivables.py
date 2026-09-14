@@ -18,7 +18,9 @@ router = APIRouter(
 )
 
 
-def get_effective_status(receivable: Receivable) -> str:
+def get_effective_status(
+    receivable: Receivable
+) -> str:
     if receivable.status == "paid":
         return "paid"
 
@@ -28,22 +30,27 @@ def get_effective_status(receivable: Receivable) -> str:
     return "pending"
 
 
-def get_days_overdue(receivable: Receivable) -> int:
+def get_days_overdue(
+    receivable: Receivable
+) -> int:
     if get_effective_status(receivable) != "overdue":
         return 0
 
-    return (date.today() - receivable.due_date).days
+    return (
+        date.today() - receivable.due_date
+    ).days
 
 
 def build_response(
     receivable: Receivable,
-    client_name: str
+    client_name: str,
+    client_phone: str
 ) -> ReceivableResponse:
-
     return ReceivableResponse(
         id=receivable.id,
         client_id=receivable.client_id,
         client_name=client_name,
+        client_phone=client_phone,
         description=receivable.description,
         amount=receivable.amount,
         due_date=receivable.due_date,
@@ -63,10 +70,11 @@ def create_receivable(
     data: ReceivableCreate,
     db: Session = Depends(get_db)
 ):
-
     client = (
         db.query(Client)
-        .filter(Client.id == data.client_id)
+        .filter(
+            Client.id == data.client_id
+        )
         .first()
     )
 
@@ -90,7 +98,8 @@ def create_receivable(
 
     return build_response(
         receivable,
-        client.name
+        client.name,
+        client.phone
     )
 
 
@@ -101,17 +110,33 @@ def create_receivable(
 def list_receivables(
     db: Session = Depends(get_db)
 ):
-
     results = (
-        db.query(Receivable, Client.name)
-        .join(Client, Client.id == Receivable.client_id)
-        .order_by(Receivable.due_date)
+        db.query(
+            Receivable,
+            Client.name,
+            Client.phone
+        )
+        .join(
+            Client,
+            Client.id == Receivable.client_id
+        )
+        .order_by(
+            Receivable.due_date
+        )
         .all()
     )
 
     return [
-        build_response(receivable, client_name)
-        for receivable, client_name in results
+        build_response(
+            receivable,
+            client_name,
+            client_phone
+        )
+        for (
+            receivable,
+            client_name,
+            client_phone
+        ) in results
     ]
 
 
@@ -122,21 +147,37 @@ def list_receivables(
 def list_overdue_receivables(
     db: Session = Depends(get_db)
 ):
-
     results = (
-        db.query(Receivable, Client.name)
-        .join(Client, Client.id == Receivable.client_id)
+        db.query(
+            Receivable,
+            Client.name,
+            Client.phone
+        )
+        .join(
+            Client,
+            Client.id == Receivable.client_id
+        )
         .filter(
             Receivable.status != "paid",
             Receivable.due_date < date.today()
         )
-        .order_by(Receivable.due_date)
+        .order_by(
+            Receivable.due_date
+        )
         .all()
     )
 
     return [
-        build_response(receivable, client_name)
-        for receivable, client_name in results
+        build_response(
+            receivable,
+            client_name,
+            client_phone
+        )
+        for (
+            receivable,
+            client_name,
+            client_phone
+        ) in results
     ]
 
 
@@ -148,10 +189,11 @@ def mark_receivable_as_paid(
     receivable_id: int,
     db: Session = Depends(get_db)
 ):
-
     receivable = (
         db.query(Receivable)
-        .filter(Receivable.id == receivable_id)
+        .filter(
+            Receivable.id == receivable_id
+        )
         .first()
     )
 
@@ -169,17 +211,28 @@ def mark_receivable_as_paid(
 
     client = (
         db.query(Client)
-        .filter(Client.id == receivable.client_id)
+        .filter(
+            Client.id == receivable.client_id
+        )
         .first()
     )
 
+    if not client:
+        raise HTTPException(
+            status_code=404,
+            detail="Cliente da cobrança não encontrado."
+        )
+
     receivable.status = "paid"
-    receivable.paid_at = datetime.now(timezone.utc)
+    receivable.paid_at = datetime.now(
+        timezone.utc
+    )
 
     db.commit()
     db.refresh(receivable)
 
     return build_response(
         receivable,
-        client.name
+        client.name,
+        client.phone
     )

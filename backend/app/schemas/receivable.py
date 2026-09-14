@@ -21,12 +21,17 @@ class ReceivableCreate(BaseModel):
 
 class ReceivableResponse(BaseModel):
     id: int
+
     client_id: int
     client_name: str
+    client_phone: str
+
     description: str
     amount: Decimal
     due_date: date
+
     status: str
     days_overdue: int
+
     created_at: datetime
     paid_at: datetime | None
