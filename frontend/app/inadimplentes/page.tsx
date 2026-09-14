@@ -100,6 +100,34 @@ export default function InadimplentesPage() {
     alert("Mensagem copiada!");
   }
 
+  function handleWhatsApp() {
+    if (!generatedMessage || !selectedReceivable) {
+      return;
+    }
+
+    let phone = selectedReceivable.client_phone.replace(
+      /\D/g,
+      ""
+    );
+
+    if (!phone.startsWith("55")) {
+      phone = `55${phone}`;
+    }
+
+    const message = encodeURIComponent(
+      generatedMessage.message
+    );
+
+    const url =
+      `https://wa.me/${phone}?text=${message}`;
+
+    window.open(
+      url,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }
+
   function closeModal() {
     setSelectedReceivable(null);
     setGeneratedMessage(null);
@@ -251,6 +279,7 @@ export default function InadimplentesPage() {
         {selectedReceivable && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
             <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-slate-800 bg-slate-900 p-6">
+
               <div className="mb-6 flex items-start justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">
@@ -259,6 +288,10 @@ export default function InadimplentesPage() {
 
                   <p className="mt-1 text-slate-400">
                     {selectedReceivable.client_name}
+                  </p>
+
+                  <p className="mt-1 text-sm text-slate-500">
+                    {selectedReceivable.client_phone}
                   </p>
                 </div>
 
@@ -326,6 +359,7 @@ export default function InadimplentesPage() {
 
               {generatedMessage && (
                 <div className="mt-6">
+
                   <p className="mb-2 text-sm font-medium text-slate-400">
                     Mensagem gerada
                   </p>
@@ -334,17 +368,31 @@ export default function InadimplentesPage() {
                     {generatedMessage.message}
                   </div>
 
-                  <button
-                    onClick={handleCopy}
-                    className="mt-4 w-full rounded-lg border border-slate-700 py-3 font-semibold transition hover:bg-slate-800"
-                  >
-                    Copiar mensagem
-                  </button>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+
+                    <button
+                      onClick={handleCopy}
+                      className="rounded-lg border border-slate-700 py-3 font-semibold transition hover:bg-slate-800"
+                    >
+                      Copiar mensagem
+                    </button>
+
+                    <button
+                      onClick={handleWhatsApp}
+                      className="rounded-lg bg-emerald-600 py-3 font-semibold transition hover:bg-emerald-500"
+                    >
+                      Enviar pelo WhatsApp
+                    </button>
+
+                  </div>
+
                 </div>
               )}
+
             </div>
           </div>
         )}
+
       </div>
     </main>
   );
