@@ -42,12 +42,12 @@ export default function Sidebar() {
           Inadimplentes
         </Link>
 
-        <button
-          className="rounded-lg px-4 py-3 text-left text-sm text-slate-500"
-          disabled
+        <Link
+          href="/conciliacao"
+          className="rounded-lg px-4 py-3 text-sm text-slate-300 transition hover:bg-slate-900 hover:text-white"
         >
           Conciliação
-        </button>
+        </Link>
       </nav>
 
       <div className="mt-auto border-t border-slate-800 pt-5">
