@@ -11,6 +11,7 @@ from app.routes.dashboard import router as dashboard_router
 from app.routes.clients import router as clients_router
 from app.routes.receivables import router as receivables_router
 from app.routes.collections import router as collections_router
+from app.routes.reconciliation import router as reconciliation_router
 
 
 
@@ -37,6 +38,7 @@ app.include_router(clients_router)
 app.include_router(receivables_router)
 app.include_router(collections_router)
 app.include_router(dashboard_router)
+app.include_router(reconciliation_router)
 
 
 @app.get("/")
