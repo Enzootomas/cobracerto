@@ -43,6 +43,13 @@ export default function Sidebar() {
         </Link>
 
         <Link
+          href="/assistente"
+          className="rounded-lg px-4 py-3 text-sm text-slate-300 transition hover:bg-slate-900 hover:text-white"
+        >
+          Assistente IA
+        </Link>
+
+        <Link
           href="/conciliacao"
           className="rounded-lg px-4 py-3 text-sm text-slate-300 transition hover:bg-slate-900 hover:text-white"
         >
