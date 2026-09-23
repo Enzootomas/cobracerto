@@ -246,3 +246,9 @@ yarn-error.log*
 # Sistema operacional
 .DS_Store
 Thumbs.db
+
+
+# Permitir a pasta lib do frontend
+!frontend/lib/
+!frontend/lib/**
+backend/extrato_teste.csv
