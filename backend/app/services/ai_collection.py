@@ -13,7 +13,7 @@ client = genai.Client(
 
 def test_gemini() -> str:
     interaction = client.interactions.create(
-        model="gemini-3.8-flash",
+        model="gemini-3.5-flash-lite",
         input="Responda apenas: Gemini conectado com sucesso.",
         generation_config={
             "thinking_level": "low"
