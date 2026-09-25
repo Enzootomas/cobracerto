@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -53,24 +54,23 @@ export default function Sidebar() {
       {/* LOGO */}
 
       <div className="mb-8 px-2">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 font-bold text-white shadow-lg shadow-blue-900/30">
-            C
-          </div>
+        <Link
+          href="/"
+          className="block"
+        >
+          <Image
+            src="/assets/logo-cobracerto.png"
+            alt="Logo CobraCerto"
+            width={190}
+            height={64}
+            priority
+            className="h-auto w-full max-w-[190px] object-contain"
+          />
+        </Link>
 
-          <div>
-            <h1 className="text-xl font-bold tracking-tight">
-              Cobra
-              <span className="text-blue-500">
-                Certo
-              </span>
-            </h1>
-
-            <p className="text-[11px] text-slate-500">
-              Receba melhor. Cobre menos.
-            </p>
-          </div>
-        </div>
+        <p className="mt-2 text-[11px] text-slate-500">
+          Receba melhor. Cobre menos.
+        </p>
       </div>
 
       {/* MENU */}
@@ -129,15 +129,15 @@ export default function Sidebar() {
       <div className="border-t border-slate-800 pt-5">
         <div className="rounded-xl bg-slate-900/70 p-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800 text-xs font-bold text-blue-400">
-              CC
-            </div>
+            <Image
+              src="/assets/logo-cobracerto.png"
+              alt="CobraCerto"
+              width={90}
+              height={30}
+              className="h-auto w-[90px] object-contain"
+            />
 
             <div>
-              <p className="text-sm font-medium text-slate-200">
-                CobraCerto
-              </p>
-
               <p className="text-[11px] text-slate-500">
                 Sistema financeiro
               </p>
