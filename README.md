@@ -1,238 +1,169 @@
-# 💰 CobraCerto
+# 🐍 CobraCerto
 
-> Plataforma inteligente para gestão de cobranças, recebimentos e conciliação financeira de pequenas e médias empresas.
+> **Receba melhor. Cobre menos.**
 
-O **CobraCerto** é um projeto SaaS desenvolvido para ajudar empresas a organizarem contas a receber, acompanharem clientes inadimplentes e automatizarem processos de cobrança de forma simples, centralizada e eficiente.
+O **CobraCerto** é uma plataforma SaaS voltada para pequenas e médias empresas, criada para ajudar no controle de contas a receber, redução da inadimplência, automação de cobranças e conciliação financeira.
 
-A proposta é reduzir o trabalho manual do setor financeiro utilizando **automação, análise de dados e Inteligência Artificial**.
+O projeto utiliza inteligência artificial para auxiliar na geração de mensagens de cobrança e na análise das informações financeiras da empresa.
 
 ---
 
-## 🚀 Sobre o projeto
+## 🌐 Aplicação online
 
-Muitas pequenas e médias empresas ainda controlam cobranças utilizando planilhas, mensagens manuais e diferentes sistemas que não se comunicam entre si.
+### Frontend
 
-O CobraCerto busca centralizar esse processo em uma única plataforma.
+https://frontend-production-4dea.up.railway.app
 
-Entre as funcionalidades previstas estão:
+### Backend / API
 
-* 📊 Dashboard financeiro
-* 💰 Controle de contas a receber
-* 👥 Gestão de clientes
-* 📅 Controle de vencimentos
-* ⚠️ Identificação de pagamentos em atraso
-* 📩 Automação de cobranças
-* 💬 Integração com WhatsApp e e-mail
-* 🤖 Apoio de Inteligência Artificial nas cobranças
-* 🔄 Conciliação automática de pagamentos
-* 🏦 Integrações financeiras e Open Finance
-* 📈 Relatórios e indicadores financeiros
+https://backend-production-1a9d.up.railway.app
+
+### Swagger
+
+https://backend-production-1a9d.up.railway.app/docs
 
 ---
 
 ## 🎯 Objetivo
 
-O objetivo do CobraCerto é permitir que uma empresa consiga visualizar rapidamente:
+Muitas pequenas empresas ainda fazem o controle de cobranças e pagamentos de forma manual.
 
-* quanto tem para receber;
-* quais clientes estão inadimplentes;
-* quais cobranças estão próximas do vencimento;
-* quais pagamentos já foram realizados;
-* quais clientes precisam receber um novo contato.
+Isso pode gerar problemas como:
 
-A plataforma também poderá utilizar IA para auxiliar na definição da melhor abordagem de cobrança para cada situação.
+- cobranças esquecidas;
+- dificuldade para acompanhar inadimplentes;
+- perda de tempo conciliando pagamentos;
+- falta de visão sobre a situação financeira;
+- dificuldade para priorizar clientes em atraso.
+
+O CobraCerto centraliza essas informações em uma única plataforma.
 
 ---
 
-## 🧠 Como funciona
+## 🚀 Funcionalidades
 
-Fluxo simplificado da plataforma:
+### 👥 Clientes
+
+- Cadastro de clientes
+- Consulta de clientes
+- Validação de dados duplicados
+- Telefone, e-mail e documento
+
+### 💰 Contas a receber
+
+- Cadastro de cobranças
+- Valor da cobrança
+- Data de vencimento
+- Status automático
+- Marcação de pagamento
+- Identificação de contas pendentes e vencidas
+
+### ⚠️ Inadimplentes
+
+O sistema identifica automaticamente cobranças vencidas e calcula:
+
+- dias de atraso;
+- valor da dívida;
+- cliente responsável;
+- situação da cobrança.
+
+### 🤖 Cobranças com Inteligência Artificial
+
+Integração com a API Gemini para gerar mensagens de cobrança.
+
+É possível utilizar diferentes tons:
+
+- amigável;
+- profissional;
+- formal;
+- direto.
+
+As mensagens são geradas utilizando os dados reais da cobrança.
+
+### 📱 WhatsApp
+
+Depois de gerar a cobrança, o usuário pode abrir o WhatsApp com:
+
+- telefone do cliente;
+- mensagem de cobrança preenchida automaticamente.
+
+### 📊 Dashboard financeiro
+
+O dashboard apresenta:
+
+- total a receber;
+- total recebido;
+- total em atraso;
+- quantidade de cobranças;
+- taxa de inadimplência;
+- distribuição por status;
+- indicadores financeiros.
+
+### 📈 Analytics
+
+Visualizações financeiras com gráficos utilizando Recharts.
+
+Permite acompanhar:
+
+- cobranças pagas;
+- cobranças pendentes;
+- cobranças vencidas;
+- valores por situação;
+- taxa de inadimplência.
+
+### 🏦 Conciliação bancária por CSV
+
+O CobraCerto permite importar um arquivo CSV contendo transações bancárias.
+
+O sistema tenta encontrar automaticamente cobranças com valores correspondentes.
+
+Fluxo:
+
+1. Upload do CSV
+2. Análise das transações
+3. Identificação de correspondências
+4. Visualização das transações não encontradas
+5. Confirmação da conciliação
+6. Atualização das cobranças como pagas
+
+### 🧠 Assistente Financeiro com IA
+
+O sistema possui um assistente financeiro conectado aos dados reais do PostgreSQL.
+
+Exemplos de perguntas:
+
+- Quanto eu já recebi?
+- Quanto tenho em atraso?
+- Quantas cobranças foram pagas?
+- Qual é minha taxa de inadimplência?
+- Quais cobranças precisam de mais atenção?
+
+A IA utiliza somente os dados financeiros existentes na aplicação.
+
+---
+
+## 🏗️ Arquitetura
 
 ```text
-Empresa
-   ↓
-Cadastro de clientes e cobranças
-   ↓
-CobraCerto
-   ↓
-Monitoramento de vencimentos
-   ↓
-Identificação de pendências
-   ↓
-Automação / IA
-   ↓
-WhatsApp • E-mail
-   ↓
-Pagamento
-   ↓
-Conciliação
-   ↓
-Dashboard atualizado
-```
-
----
-
-## 🛠️ Tecnologias
-
-### Front-end
-
-* Next.js
-* React
-* TypeScript
-* Tailwind CSS
-* ESLint
-* App Router
-
-### Back-end
-
-* Python
-* API REST
-* Ambiente virtual Python
-
-### Tecnologias previstas
-
-O projeto foi estruturado para futuramente permitir integrações com:
-
-* APIs de WhatsApp
-* Serviços de e-mail
-* Open Finance
-* APIs bancárias
-* BigQuery
-* Serviços de Inteligência Artificial
-* Gateways e serviços financeiros
-
----
-
-## 📁 Estrutura do projeto
-
-```text
-cobracerto/
-│
-├── backend/
-│   └── API e regras de negócio
-│
-├── frontend/
-│   ├── src/
-│   │   ├── app/
-│   │   ├── components/
-│   │   └── ...
-│   │
-│   └── package.json
-│
-└── README.md
-```
-
----
-
-## 💻 Executando o projeto
-
-### Clone o repositório
-
-```bash
-git clone URL_DO_REPOSITORIO
-```
-
-```bash
-cd cobracerto
-```
-
-### Front-end
-
-Entre na pasta:
-
-```bash
-cd frontend
-```
-
-Instale as dependências:
-
-```bash
-npm install
-```
-
-Execute o projeto:
-
-```bash
-npm run dev
-```
-
-O front-end estará disponível normalmente em:
-
-```text
-http://localhost:3000
-```
-
-### Back-end
-
-Entre na pasta:
-
-```bash
-cd backend
-```
-
-Crie o ambiente virtual:
-
-```bash
-python -m venv .venv
-```
-
-Ative o ambiente virtual no Windows:
-
-```bash
-.venv\Scripts\activate
-```
-
-Instale as dependências:
-
-```bash
-pip install -r requirements.txt
-```
-
-Execute o servidor conforme a configuração disponível no back-end.
-
----
-
-## 👨‍💻 Desenvolvimento
-
-O CobraCerto está sendo desenvolvido como um projeto prático de engenharia de software, envolvendo conceitos de:
-
-* desenvolvimento Full Stack;
-* APIs;
-* banco de dados;
-* automação;
-* Inteligência Artificial;
-* análise de dados;
-* arquitetura de sistemas;
-* integração entre serviços.
-
----
-
-## 📌 Status
-
-🚧 **Projeto em desenvolvimento**
-
-Novas funcionalidades e integrações estão sendo implementadas gradualmente.
-
----
-
-## 💡 Visão do produto
-
-A ideia do CobraCerto não é ser apenas um sistema que mostra quem está devendo.
-
-A proposta é criar uma plataforma capaz de acompanhar todo o ciclo de recebimento:
-
-**Cobrança → Comunicação → Pagamento → Conciliação → Análise**
-
-Tudo em um único ambiente.
-
----
-
-## 📄 Licença
-
-Projeto desenvolvido para fins de aprendizado, desenvolvimento tecnológico e evolução futura do produto.
-
----
-
-### CobraCerto
-
-**Cobranças mais simples. Controle financeiro mais inteligente.**
+                    ┌─────────────────┐
+                    │     Usuário     │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │     Next.js     │
+                    │    Frontend     │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │     FastAPI     │
+                    │     Backend     │
+                    └───────┬─┬───────┘
+                            │ │
+                ┌───────────┘ └───────────┐
+                ▼                         ▼
+        ┌───────────────┐         ┌───────────────┐
+        │  PostgreSQL   │         │  Gemini API   │
+        │ Banco de dados│         │      IA       │
+        └───────────────┘         └───────────────┘
