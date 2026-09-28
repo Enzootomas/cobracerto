@@ -10,13 +10,9 @@ import {
 
 export default function ClientsPage() {
   const [clients, setClients] = useState<Client[]>([]);
-
   const [loading, setLoading] = useState(true);
-
   const [saving, setSaving] = useState(false);
-
   const [error, setError] = useState("");
-
   const [success, setSuccess] = useState("");
 
   const [form, setForm] = useState({
@@ -29,9 +25,7 @@ export default function ClientsPage() {
   async function loadClients() {
     try {
       setLoading(true);
-
       const data = await getClients();
-
       setClients(data);
     } catch {
       setError(
@@ -104,7 +98,10 @@ export default function ClientsPage() {
         <div className="grid gap-8 xl:grid-cols-[380px_1fr]">
           {/* FORMULÁRIO */}
 
-          <section className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+          <section
+            id="novo-cliente"
+            className="scroll-mt-8 rounded-2xl border border-slate-800 bg-slate-900 p-6 transition target:border-blue-600 target:ring-2 target:ring-blue-600/20"
+          >
             <h3 className="mb-6 text-lg font-semibold">
               Novo cliente
             </h3>
