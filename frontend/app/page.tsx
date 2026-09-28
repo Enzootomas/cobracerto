@@ -32,13 +32,13 @@ const quickActions = [
   {
     title: "Novo cliente",
     description: "Cadastre um novo cliente",
-    href: "/clientes",
+    href: "/clientes#novo-cliente",
     icon: UserPlus,
   },
   {
     title: "Nova cobrança",
     description: "Cadastre uma conta a receber",
-    href: "/contas-receber",
+    href: "/contas-receber#nova-cobranca",
     icon: Plus,
   },
   {
@@ -284,6 +284,8 @@ export default function DashboardPage() {
             {/* GRÁFICO E SITUAÇÃO */}
 
             <div className="mt-8 grid gap-6 lg:grid-cols-2">
+              {/* GRÁFICO */}
+
               <section className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
                 <h2 className="text-xl font-semibold">
                   Distribuição das cobranças
@@ -325,11 +327,14 @@ export default function DashboardPage() {
                       </Pie>
 
                       <Tooltip />
+
                       <Legend />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
               </section>
+
+              {/* INDICADORES */}
 
               <section className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
                 <h2 className="text-xl font-semibold">
