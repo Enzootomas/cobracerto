@@ -12,7 +12,6 @@ import {
   markReceivableAsPaid,
 } from "@/lib/api";
 
-
 export default function ReceivablesPage() {
   const [clients, setClients] = useState<Client[]>([]);
   const [receivables, setReceivables] =
@@ -31,7 +30,6 @@ export default function ReceivablesPage() {
     due_date: "",
   });
 
-
   async function loadData() {
     try {
       setLoading(true);
@@ -45,7 +43,6 @@ export default function ReceivablesPage() {
 
       setClients(clientsData);
       setReceivables(receivablesData);
-
     } catch {
       setError(
         "Não foi possível carregar os dados."
@@ -55,11 +52,9 @@ export default function ReceivablesPage() {
     }
   }
 
-
   useEffect(() => {
     loadData();
   }, []);
-
 
   async function handleSubmit(
     event: FormEvent<HTMLFormElement>
@@ -96,7 +91,6 @@ export default function ReceivablesPage() {
       });
 
       await loadData();
-
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -107,7 +101,6 @@ export default function ReceivablesPage() {
       setSaving(false);
     }
   }
-
 
   async function handlePaid(id: number) {
     const confirmed = window.confirm(
@@ -129,14 +122,12 @@ export default function ReceivablesPage() {
       );
 
       await loadData();
-
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
       }
     }
   }
-
 
   function formatCurrency(value: string) {
     return Number(value).toLocaleString(
@@ -148,14 +139,12 @@ export default function ReceivablesPage() {
     );
   }
 
-
   function formatDate(value: string) {
     const [year, month, day] =
       value.split("-");
 
     return `${day}/${month}/${year}`;
   }
-
 
   function getStatus(status: string) {
     if (status === "paid") {
@@ -181,12 +170,9 @@ export default function ReceivablesPage() {
     };
   }
 
-
   return (
     <main className="min-h-screen bg-slate-950 p-8 text-white">
-
       <div className="mx-auto max-w-7xl">
-
         <div className="mb-8">
           <p className="text-sm font-medium text-blue-400">
             CobraCerto
@@ -201,7 +187,6 @@ export default function ReceivablesPage() {
           </p>
         </div>
 
-
         {error && (
           <div className="mb-6 rounded-xl border border-red-900 bg-red-950/40 p-4 text-red-300">
             {error}
@@ -214,13 +199,13 @@ export default function ReceivablesPage() {
           </div>
         )}
 
-
         <div className="grid gap-8 xl:grid-cols-[380px_1fr]">
-
           {/* NOVA COBRANÇA */}
 
-          <section className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-
+          <section
+            id="nova-cobranca"
+            className="scroll-mt-8 rounded-2xl border border-slate-800 bg-slate-900 p-6 transition target:border-blue-600 target:ring-2 target:ring-blue-600/20"
+          >
             <h2 className="mb-6 text-xl font-semibold">
               Nova cobrança
             </h2>
@@ -229,7 +214,6 @@ export default function ReceivablesPage() {
               onSubmit={handleSubmit}
               className="space-y-4"
             >
-
               <div>
                 <label className="mb-2 block text-sm text-slate-400">
                   Cliente
@@ -262,7 +246,6 @@ export default function ReceivablesPage() {
                 </select>
               </div>
 
-
               <div>
                 <label className="mb-2 block text-sm text-slate-400">
                   Descrição
@@ -282,7 +265,6 @@ export default function ReceivablesPage() {
                   className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 outline-none focus:border-blue-500"
                 />
               </div>
-
 
               <div>
                 <label className="mb-2 block text-sm text-slate-400">
@@ -307,7 +289,6 @@ export default function ReceivablesPage() {
                 />
               </div>
 
-
               <div>
                 <label className="mb-2 block text-sm text-slate-400">
                   Vencimento
@@ -328,7 +309,6 @@ export default function ReceivablesPage() {
                 />
               </div>
 
-
               <button
                 type="submit"
                 disabled={saving}
@@ -338,18 +318,13 @@ export default function ReceivablesPage() {
                   ? "Criando..."
                   : "Criar cobrança"}
               </button>
-
             </form>
-
           </section>
-
 
           {/* LISTAGEM */}
 
           <section className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900">
-
             <div className="border-b border-slate-800 p-6">
-
               <h2 className="text-xl font-semibold">
                 Cobranças
               </h2>
@@ -357,28 +332,19 @@ export default function ReceivablesPage() {
               <p className="mt-1 text-sm text-slate-400">
                 {receivables.length} cobrança(s)
               </p>
-
             </div>
 
-
             {loading ? (
-
               <div className="p-8 text-slate-400">
                 Carregando cobranças...
               </div>
-
             ) : receivables.length === 0 ? (
-
               <div className="p-8 text-slate-400">
                 Nenhuma cobrança cadastrada.
               </div>
-
             ) : (
-
               <div className="overflow-x-auto">
-
                 <table className="w-full text-left">
-
                   <thead className="text-xs uppercase text-slate-500">
                     <tr>
                       <th className="px-6 py-4">
@@ -407,12 +373,9 @@ export default function ReceivablesPage() {
                     </tr>
                   </thead>
 
-
                   <tbody>
-
                     {receivables.map(
                       (receivable) => {
-
                         const status =
                           getStatus(
                             receivable.status
@@ -425,7 +388,6 @@ export default function ReceivablesPage() {
                             }
                             className="border-t border-slate-800"
                           >
-
                             <td className="px-6 py-4 font-medium">
                               {
                                 receivable.client_name
@@ -451,7 +413,6 @@ export default function ReceivablesPage() {
                             </td>
 
                             <td className="px-6 py-4">
-
                               <span
                                 className={`rounded-full border px-3 py-1 text-xs font-medium ${status.classes}`}
                               >
@@ -469,14 +430,11 @@ export default function ReceivablesPage() {
                                   dia(s) em atraso
                                 </p>
                               )}
-
                             </td>
 
                             <td className="px-6 py-4">
-
                               {receivable.status !==
                               "paid" ? (
-
                                 <button
                                   onClick={() =>
                                     handlePaid(
@@ -487,36 +445,23 @@ export default function ReceivablesPage() {
                                 >
                                   Marcar como pago
                                 </button>
-
                               ) : (
-
                                 <span className="text-sm text-slate-500">
                                   Finalizado
                                 </span>
-
                               )}
-
                             </td>
-
                           </tr>
                         );
                       }
                     )}
-
                   </tbody>
-
                 </table>
-
               </div>
-
             )}
-
           </section>
-
         </div>
-
       </div>
-
     </main>
   );
 }
