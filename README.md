@@ -2,52 +2,73 @@
 
 > **Receba melhor. Cobre menos.**
 
-O **CobraCerto** é uma plataforma SaaS voltada para pequenas e médias empresas, criada para ajudar no controle de contas a receber, redução da inadimplência, automação de cobranças e conciliação financeira.
+O **CobraCerto** é uma plataforma SaaS de gestão de cobranças e recebimentos voltada para pequenas e médias empresas.
 
-O projeto utiliza inteligência artificial para auxiliar na geração de mensagens de cobrança e na análise das informações financeiras da empresa.
+A aplicação centraliza clientes, contas a receber, inadimplência, conciliação bancária e indicadores financeiros, além de utilizar **Inteligência Artificial com Google Gemini** para geração de mensagens de cobrança e análise financeira.
 
 ---
 
 ## 🌐 Aplicação online
 
-### Frontend
+**Frontend**
 
 https://frontend-production-4dea.up.railway.app
 
-### Backend / API
+**Backend / API**
 
 https://backend-production-1a9d.up.railway.app
 
-### Swagger
+**Swagger**
 
 https://backend-production-1a9d.up.railway.app/docs
 
 ---
 
-## 🎯 Objetivo
+## 📸 Preview
 
-Muitas pequenas empresas ainda fazem o controle de cobranças e pagamentos de forma manual.
+### Desktop
 
-Isso pode gerar problemas como:
+![Dashboard CobraCerto Desktop](docs/screenshots/docs/screenshots/dashboard-desktop.png)
 
-- cobranças esquecidas;
-- dificuldade para acompanhar inadimplentes;
-- perda de tempo conciliando pagamentos;
-- falta de visão sobre a situação financeira;
-- dificuldade para priorizar clientes em atraso.
+### Mobile
 
-O CobraCerto centraliza essas informações em uma única plataforma.
+<p align="center">
+  <img src="docs/screenshots/docs/screenshots/docs/screenshots/dashboard-mobile.png" alt="Dashboard CobraCerto Mobile" width="360">
+</p>
 
 ---
 
-## 🚀 Funcionalidades
+## 🎯 Problema
 
-### 👥 Clientes
+Muitas pequenas e médias empresas ainda realizam o controle de cobranças e pagamentos utilizando planilhas, mensagens manuais e processos separados.
+
+Isso pode gerar:
+
+- cobranças esquecidas;
+- aumento da inadimplência;
+- dificuldade para identificar clientes em atraso;
+- perda de tempo com tarefas financeiras manuais;
+- dificuldade na conciliação de pagamentos;
+- pouca visibilidade sobre a situação financeira da empresa.
+
+---
+
+## 💡 Solução
+
+O CobraCerto centraliza o processo de cobrança em uma única plataforma.
+
+A empresa consegue acompanhar seus clientes, registrar contas a receber, identificar inadimplentes, gerar mensagens de cobrança com IA, realizar conciliação bancária e consultar seus indicadores financeiros através de um dashboard.
+
+---
+
+## 🚀 Principais funcionalidades
+
+### 👥 Gestão de clientes
 
 - Cadastro de clientes
 - Consulta de clientes
-- Validação de dados duplicados
 - Telefone, e-mail e documento
+- Validação de registros duplicados
 
 ### 💰 Contas a receber
 
@@ -55,80 +76,81 @@ O CobraCerto centraliza essas informações em uma única plataforma.
 - Valor da cobrança
 - Data de vencimento
 - Status automático
+- Identificação de cobranças pendentes
+- Identificação de cobranças vencidas
 - Marcação de pagamento
-- Identificação de contas pendentes e vencidas
 
-### ⚠️ Inadimplentes
+### ⚠️ Controle de inadimplência
 
-O sistema identifica automaticamente cobranças vencidas e calcula:
+O sistema identifica automaticamente cobranças vencidas e apresenta informações como:
 
-- dias de atraso;
-- valor da dívida;
 - cliente responsável;
+- valor em atraso;
+- data de vencimento;
+- quantidade de dias em atraso;
 - situação da cobrança.
 
 ### 🤖 Cobranças com Inteligência Artificial
 
-Integração com a API Gemini para gerar mensagens de cobrança.
+O CobraCerto utiliza a API do **Google Gemini** para gerar mensagens de cobrança baseadas nos dados reais registrados no sistema.
 
-É possível utilizar diferentes tons:
+O usuário pode escolher diferentes tons:
 
 - amigável;
 - profissional;
 - formal;
 - direto.
 
-As mensagens são geradas utilizando os dados reais da cobrança.
+A aplicação possui fallback para garantir que a cobrança continue funcionando mesmo em caso de indisponibilidade temporária do serviço de IA.
 
-### 📱 WhatsApp
+### 📱 Integração com WhatsApp
 
-Depois de gerar a cobrança, o usuário pode abrir o WhatsApp com:
+Após gerar a mensagem, o sistema permite abrir o WhatsApp com:
 
 - telefone do cliente;
-- mensagem de cobrança preenchida automaticamente.
+- mensagem de cobrança previamente preenchida.
 
 ### 📊 Dashboard financeiro
 
-O dashboard apresenta:
+O dashboard apresenta uma visão geral da situação financeira da empresa, incluindo:
 
 - total a receber;
 - total recebido;
-- total em atraso;
+- total vencido;
 - quantidade de cobranças;
 - taxa de inadimplência;
-- distribuição por status;
-- indicadores financeiros.
+- distribuição das cobranças por status.
+
+Também possui ações rápidas para acesso às principais funcionalidades.
 
 ### 📈 Analytics
 
-Visualizações financeiras com gráficos utilizando Recharts.
+O sistema utiliza **Recharts** para apresentar informações financeiras de forma visual.
 
-Permite acompanhar:
+Os gráficos permitem acompanhar cobranças:
 
-- cobranças pagas;
-- cobranças pendentes;
-- cobranças vencidas;
-- valores por situação;
-- taxa de inadimplência.
+- pagas;
+- pendentes;
+- vencidas.
 
 ### 🏦 Conciliação bancária por CSV
 
-O CobraCerto permite importar um arquivo CSV contendo transações bancárias.
+O usuário pode importar um extrato bancário no formato CSV.
 
-O sistema tenta encontrar automaticamente cobranças com valores correspondentes.
+O CobraCerto analisa as transações e procura cobranças correspondentes.
 
 Fluxo:
 
-1. Upload do CSV
+1. Upload do arquivo CSV
 2. Análise das transações
-3. Identificação de correspondências
-4. Visualização das transações não encontradas
+3. Identificação de possíveis correspondências
+4. Exibição das transações encontradas e não encontradas
 5. Confirmação da conciliação
-6. Atualização das cobranças como pagas
+6. Atualização das cobranças conciliadas como pagas
 
 ### 🧠 Assistente Financeiro com IA
 
-O sistema possui um assistente financeiro conectado aos dados reais do PostgreSQL.
+O CobraCerto possui um assistente financeiro conectado aos dados reais armazenados no PostgreSQL.
 
 Exemplos de perguntas:
 
@@ -138,7 +160,45 @@ Exemplos de perguntas:
 - Qual é minha taxa de inadimplência?
 - Quais cobranças precisam de mais atenção?
 
-A IA utiliza somente os dados financeiros existentes na aplicação.
+---
+
+## 🛠️ Tecnologias
+
+### Frontend
+
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Recharts
+- Lucide React
+
+### Backend
+
+- Python
+- FastAPI
+- SQLAlchemy
+- Pydantic
+
+### Banco de dados
+
+- PostgreSQL
+
+### Inteligência Artificial
+
+- Google Gemini API
+
+### Infraestrutura
+
+- Docker
+- Docker Compose
+- Railway
+
+### Versionamento
+
+- Git
+- GitHub
+- Git Flow
+- Pull Requests
 
 ---
 
