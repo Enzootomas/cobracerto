@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import type { FormEvent } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Client,
@@ -22,9 +23,8 @@ export default function ClientsPage() {
     document: "",
   });
 
-  async function loadClients() {
+  async function refreshClients() {
     try {
-      setLoading(true);
       const data = await getClients();
       setClients(data);
     } catch {
@@ -37,7 +37,30 @@ export default function ClientsPage() {
   }
 
   useEffect(() => {
-    loadClients();
+    let active = true;
+
+    getClients()
+      .then((data) => {
+        if (active) {
+          setClients(data);
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setError(
+            "Não foi possível carregar os clientes."
+          );
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   async function handleSubmit(
@@ -64,7 +87,8 @@ export default function ClientsPage() {
         document: "",
       });
 
-      await loadClients();
+      setLoading(true);
+      await refreshClients();
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);

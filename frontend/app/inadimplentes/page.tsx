@@ -11,7 +11,9 @@ import {
 } from "../../lib/api";
 
 export default function InadimplentesPage() {
-  const [receivables, setReceivables] = useState<Receivable[]>([]);
+  const [receivables, setReceivables] =
+    useState<Receivable[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -26,38 +28,52 @@ export default function InadimplentesPage() {
 
   const [generating, setGenerating] = useState(false);
 
-  async function loadOverdue() {
-    try {
-      setLoading(true);
-      setError("");
-
-      const data = await getOverdueReceivables();
-
-      setReceivables(data);
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("Erro ao carregar inadimplentes.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
-    loadOverdue();
+    let active = true;
+
+    getOverdueReceivables()
+      .then((data) => {
+        if (active) {
+          setReceivables(data);
+        }
+      })
+      .catch((error) => {
+        if (!active) {
+          return;
+        }
+
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError(
+            "Erro ao carregar inadimplentes."
+          );
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   function formatCurrency(value: string) {
-    return Number(value).toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
+    return Number(value).toLocaleString(
+      "pt-BR",
+      {
+        style: "currency",
+        currency: "BRL",
+      }
+    );
   }
 
   function formatDate(value: string) {
-    const [year, month, day] = value.split("-");
+    const [year, month, day] =
+      value.split("-");
 
     return `${day}/${month}/${year}`;
   }
@@ -71,17 +87,20 @@ export default function InadimplentesPage() {
       setGenerating(true);
       setError("");
 
-      const message = await generateCollectionMessage(
-        selectedReceivable.id,
-        tone
-      );
+      const message =
+        await generateCollectionMessage(
+          selectedReceivable.id,
+          tone
+        );
 
       setGeneratedMessage(message);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError("Erro ao gerar mensagem.");
+        setError(
+          "Erro ao gerar mensagem."
+        );
       }
     } finally {
       setGenerating(false);
@@ -101,14 +120,18 @@ export default function InadimplentesPage() {
   }
 
   function handleWhatsApp() {
-    if (!generatedMessage || !selectedReceivable) {
+    if (
+      !generatedMessage ||
+      !selectedReceivable
+    ) {
       return;
     }
 
-    let phone = selectedReceivable.client_phone.replace(
-      /\D/g,
-      ""
-    );
+    let phone =
+      selectedReceivable.client_phone.replace(
+        /\D/g,
+        ""
+      );
 
     if (!phone.startsWith("55")) {
       phone = `55${phone}`;
@@ -143,7 +166,6 @@ export default function InadimplentesPage() {
   return (
     <main className="min-h-screen bg-slate-950 p-6 text-white md:p-8">
       <div className="mx-auto max-w-7xl">
-
         <div className="mb-8">
           <p className="text-sm font-semibold text-blue-400">
             CobraCerto
@@ -154,8 +176,8 @@ export default function InadimplentesPage() {
           </h1>
 
           <p className="mt-2 text-slate-400">
-            Acompanhe cobranças em atraso e gere mensagens
-            personalizadas.
+            Acompanhe cobranças em atraso e gere
+            mensagens personalizadas.
           </p>
         </div>
 
@@ -182,10 +204,13 @@ export default function InadimplentesPage() {
             </p>
 
             <p className="mt-2 text-3xl font-bold text-red-400">
-              {totalOverdue.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}
+              {totalOverdue.toLocaleString(
+                "pt-BR",
+                {
+                  style: "currency",
+                  currency: "BRL",
+                }
+              )}
             </p>
           </div>
         </div>
@@ -208,78 +233,91 @@ export default function InadimplentesPage() {
           </div>
         ) : (
           <div className="grid gap-6 lg:grid-cols-2">
-            {receivables.map((receivable) => (
-              <div
-                key={receivable.id}
-                className="rounded-2xl border border-slate-800 bg-slate-900 p-6"
-              >
-                <div className="mb-5 flex items-start justify-between gap-4">
-                  <div>
-                    <h2 className="text-xl font-semibold">
-                      {receivable.client_name}
-                    </h2>
-
-                    <p className="mt-1 text-slate-400">
-                      {receivable.description}
-                    </p>
-                  </div>
-
-                  <span className="rounded-full border border-red-800 bg-red-950 px-3 py-1 text-xs font-medium text-red-400">
-                    Atrasado
-                  </span>
-                </div>
-
-                <div className="mb-6 space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">
-                      Valor
-                    </span>
-
-                    <span className="font-semibold">
-                      {formatCurrency(receivable.amount)}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">
-                      Vencimento
-                    </span>
-
-                    <span>
-                      {formatDate(receivable.due_date)}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">
-                      Dias em atraso
-                    </span>
-
-                    <span className="font-semibold text-red-400">
-                      {receivable.days_overdue}
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => {
-                    setSelectedReceivable(receivable);
-                    setGeneratedMessage(null);
-                    setTone("professional");
-                  }}
-                  className="w-full rounded-lg bg-blue-600 py-3 font-semibold transition hover:bg-blue-500"
+            {receivables.map(
+              (receivable) => (
+                <div
+                  key={receivable.id}
+                  className="rounded-2xl border border-slate-800 bg-slate-900 p-6"
                 >
-                  Gerar cobrança
-                </button>
-              </div>
-            ))}
+                  <div className="mb-5 flex items-start justify-between gap-4">
+                    <div>
+                      <h2 className="text-xl font-semibold">
+                        {
+                          receivable.client_name
+                        }
+                      </h2>
+
+                      <p className="mt-1 text-slate-400">
+                        {
+                          receivable.description
+                        }
+                      </p>
+                    </div>
+
+                    <span className="rounded-full border border-red-800 bg-red-950 px-3 py-1 text-xs font-medium text-red-400">
+                      Atrasado
+                    </span>
+                  </div>
+
+                  <div className="mb-6 space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">
+                        Valor
+                      </span>
+
+                      <span className="font-semibold">
+                        {formatCurrency(
+                          receivable.amount
+                        )}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">
+                        Vencimento
+                      </span>
+
+                      <span>
+                        {formatDate(
+                          receivable.due_date
+                        )}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">
+                        Dias em atraso
+                      </span>
+
+                      <span className="font-semibold text-red-400">
+                        {
+                          receivable.days_overdue
+                        }
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setSelectedReceivable(
+                        receivable
+                      );
+                      setGeneratedMessage(null);
+                      setTone("professional");
+                    }}
+                    className="w-full rounded-lg bg-blue-600 py-3 font-semibold transition hover:bg-blue-500"
+                  >
+                    Gerar cobrança
+                  </button>
+                </div>
+              )
+            )}
           </div>
         )}
 
         {selectedReceivable && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
             <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-slate-800 bg-slate-900 p-6">
-
               <div className="mb-6 flex items-start justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">
@@ -287,11 +325,15 @@ export default function InadimplentesPage() {
                   </h2>
 
                   <p className="mt-1 text-slate-400">
-                    {selectedReceivable.client_name}
+                    {
+                      selectedReceivable.client_name
+                    }
                   </p>
 
                   <p className="mt-1 text-sm text-slate-500">
-                    {selectedReceivable.client_phone}
+                    {
+                      selectedReceivable.client_phone
+                    }
                   </p>
                 </div>
 
@@ -305,15 +347,20 @@ export default function InadimplentesPage() {
 
               <div className="mb-6 rounded-xl border border-slate-800 bg-slate-950 p-4">
                 <p className="font-medium">
-                  {selectedReceivable.description}
+                  {
+                    selectedReceivable.description
+                  }
                 </p>
 
                 <p className="mt-2 text-sm text-slate-400">
                   {formatCurrency(
                     selectedReceivable.amount
                   )}{" "}
-                  • {selectedReceivable.days_overdue} dia(s)
-                  em atraso
+                  •{" "}
+                  {
+                    selectedReceivable.days_overdue
+                  }{" "}
+                  dia(s) em atraso
                 </p>
               </div>
 
@@ -325,7 +372,8 @@ export default function InadimplentesPage() {
                 value={tone}
                 onChange={(event) =>
                   setTone(
-                    event.target.value as CollectionTone
+                    event.target
+                      .value as CollectionTone
                   )
                 }
                 className="mb-5 w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 outline-none focus:border-blue-500"
@@ -359,17 +407,17 @@ export default function InadimplentesPage() {
 
               {generatedMessage && (
                 <div className="mt-6">
-
                   <p className="mb-2 text-sm font-medium text-slate-400">
                     Mensagem gerada
                   </p>
 
                   <div className="rounded-xl border border-slate-700 bg-slate-950 p-5 leading-7 text-slate-200">
-                    {generatedMessage.message}
+                    {
+                      generatedMessage.message
+                    }
                   </div>
 
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
-
                     <button
                       onClick={handleCopy}
                       className="rounded-lg border border-slate-700 py-3 font-semibold transition hover:bg-slate-800"
@@ -383,16 +431,12 @@ export default function InadimplentesPage() {
                     >
                       Enviar pelo WhatsApp
                     </button>
-
                   </div>
-
                 </div>
               )}
-
             </div>
           </div>
         )}
-
       </div>
     </main>
   );

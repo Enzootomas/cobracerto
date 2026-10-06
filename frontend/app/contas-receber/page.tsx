@@ -30,11 +30,8 @@ export default function ReceivablesPage() {
     due_date: "",
   });
 
-  async function loadData() {
+  async function refreshData() {
     try {
-      setLoading(true);
-      setError("");
-
       const [clientsData, receivablesData] =
         await Promise.all([
           getClients(),
@@ -53,7 +50,38 @@ export default function ReceivablesPage() {
   }
 
   useEffect(() => {
-    loadData();
+    let active = true;
+
+    Promise.all([
+      getClients(),
+      getReceivables(),
+    ])
+      .then(
+        ([clientsData, receivablesData]) => {
+          if (!active) {
+            return;
+          }
+
+          setClients(clientsData);
+          setReceivables(receivablesData);
+        }
+      )
+      .catch(() => {
+        if (active) {
+          setError(
+            "Não foi possível carregar os dados."
+          );
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   async function handleSubmit(
@@ -90,7 +118,8 @@ export default function ReceivablesPage() {
         due_date: "",
       });
 
-      await loadData();
+      setLoading(true);
+      await refreshData();
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -121,7 +150,8 @@ export default function ReceivablesPage() {
         "Cobrança marcada como paga."
       );
 
-      await loadData();
+      setLoading(true);
+      await refreshData();
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -171,7 +201,7 @@ export default function ReceivablesPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 p-8 text-white">
+    <main className="min-h-screen bg-slate-950 p-6 text-white md:p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
           <p className="text-sm font-medium text-blue-400">
