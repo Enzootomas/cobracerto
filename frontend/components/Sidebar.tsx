@@ -54,11 +54,9 @@ export default function Sidebar() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    document.body.style.overflow = open
+      ? "hidden"
+      : "";
 
     return () => {
       document.body.style.overflow = "";
@@ -70,7 +68,11 @@ export default function Sidebar() {
       {/* BARRA MOBILE */}
 
       <header className="fixed left-0 right-0 top-0 z-40 flex h-16 items-center justify-between border-b border-slate-800 bg-slate-950/95 px-4 backdrop-blur lg:hidden">
-        <Link href="/" className="flex items-center">
+        <Link
+          href="/"
+          onClick={() => setOpen(false)}
+          className="flex items-center"
+        >
           <Image
             src="/assets/logo-cobracerto.png"
             alt="Logo CobraCerto"
@@ -123,7 +125,11 @@ export default function Sidebar() {
 
         <div className="mb-8">
           <div className="flex items-start justify-between gap-3">
-            <Link href="/" className="block">
+            <Link
+              href="/"
+              onClick={() => setOpen(false)}
+              className="block"
+            >
               <Image
                 src="/assets/logo-cobracerto.png"
                 alt="Logo CobraCerto"
@@ -162,13 +168,17 @@ export default function Sidebar() {
             const active =
               item.href === "/"
                 ? pathname === "/"
-                : pathname.startsWith(item.href);
+                : pathname.startsWith(
+                    item.href
+                  );
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setOpen(false)}
+                onClick={() =>
+                  setOpen(false)
+                }
                 className={`
                   group flex items-center gap-3 rounded-xl px-3 py-3
                   text-sm font-medium transition-all duration-200
