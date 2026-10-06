@@ -28,12 +28,12 @@ https://backend-production-1a9d.up.railway.app/docs
 
 ### Desktop
 
-![Dashboard CobraCerto Desktop](docs/screenshots/docs/screenshots/dashboard-desktop.png)
+![Dashboard CobraCerto Desktop](docs/screenshots/dashboard-desktop.png)
 
 ### Mobile
 
 <p align="center">
-  <img src="docs/screenshots/docs/screenshots/docs/screenshots/dashboard-mobile.png" alt="Dashboard CobraCerto Mobile" width="360">
+  <img src="docs/screenshots/dashboard-mobile.png" alt="Dashboard CobraCerto Mobile" width="360">
 </p>
 
 ---
