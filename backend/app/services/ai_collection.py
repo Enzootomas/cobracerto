@@ -2,12 +2,19 @@ from datetime import date
 from decimal import Decimal
 
 from google import genai
+from google.genai import types
 
 from app.database.connection import settings
 
 
 client = genai.Client(
-    api_key=settings.gemini_api_key
+    api_key=settings.gemini_api_key,
+    http_options=types.HttpOptions(
+        timeout=10000,
+        retry_options=types.HttpRetryOptions(
+            attempts=1
+        )
+    )
 )
 
 
